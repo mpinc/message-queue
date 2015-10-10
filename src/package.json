@@ -1,0 +1,15 @@
+{
+        "name": "message-queue",
+        "version": "0.0.1",
+        "description": "mission public message queue project",
+        "main": "timerStat.js",
+        "dependencies": {
+                "seq": "0.3.5",
+				"later"	: "*",
+                "request" : "*",
+                "log4js" : "0.6.21" ,
+                "amqplib" : "0.4.0"
+        },
+        "author": "Ling Xue",
+        "license": ""
+}
