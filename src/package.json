@@ -6,7 +6,9 @@
         "dependencies": {
                 "seq": "0.3.5",
 				"later"	: "*",
-                "request" : "*",
+                "request": "*",
+                "restify": "2.8.5",
+                "restify-errors" :"*",
                 "log4js" : "0.6.21" ,
                 "amqplib" : "0.4.0"
         },
