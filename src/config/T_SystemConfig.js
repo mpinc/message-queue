@@ -20,12 +20,12 @@ var logLevel = 'DEBUG';
 var loggerConfig = {
     appenders: [
         { type: 'console' }
-        /*,{
+        ,{
          type: 'file',
          filename: './logs/access.log',
          maxLogSize: '4m',
          backups:4
-         }*/
+         }
     ],
     replaceConsole: true
 }
