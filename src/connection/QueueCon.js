@@ -13,6 +13,9 @@ var sms = require('../bl/SMS.js');
 
 var rabbitConnect = null;
 var rabbitChannel = null;
+var keys = [];
+keys.push('*.'+lov.RABBIT_TOPIC_NOTIFICATION);
+keys.push('*.'+lov.RABBIT_TOPIC_ORDER);
 getConnection();
 
 
@@ -71,7 +74,32 @@ function receiveChannelMsg(queue,callback){
                     logger.error("create rabbit channel error :"+error.message);
                     callback(error,null);
                 }else{
-                    ch.assertQueue(queue, {durable: true}, function(err, result) {
+                    ch.assertExchange(lov.RABBIT_EXCHANGE, 'topic', {durable:true});
+                    ch.assertQueue('', {exclusive: true,durable:true}, function(err, ok) {
+                        if (err !== null) {
+                            logger.error("create rabbit queue error :"+err.message);
+
+                        }else{
+                            var queue = ok.queue,i=0;
+                            function sub(err) {
+                                if (err !== null) {
+                                    logger.error("create rabbit queue error :"+err.message);
+                                }
+                                else if (i < keys.length) {
+                                    ch.bindQueue(queue, lov.RABBIT_EXCHANGE, keys[i], {durable:true}, sub);
+                                    i++;
+                                }
+                            }
+                            ch.consume(queue, doWork, {noAck: false,durable:true}, function(err) {
+                                if (err !== null) {
+                                    logger.error("create rabbit queue error :"+err.message);
+                                }else{
+                                    sub(null);
+                                }
+                            });
+                        }
+                    })
+                    /*ch.assertQueue(queue, {durable: true}, function(err, result) {
                         if (err !== null) {
                             logger.error("create rabbit queue error :"+err.message);
 
@@ -82,7 +110,7 @@ function receiveChannelMsg(queue,callback){
                             logger.info(" send to rabbit success " );
                         }
                         callback(err,result)
-                    });
+                    });*/
                     function doWork(msg) {
                         var body = msg.content.toString();
                         try{
