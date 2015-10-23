@@ -6,6 +6,7 @@
         "dependencies": {
                 "seq": "0.3.5",
 				"later"	: "*",
+				"mysql"	: "*",
                 "request": "*",
                 "restify": "2.8.5",
                 "restify-errors" :"*",

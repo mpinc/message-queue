@@ -7,15 +7,17 @@ var sysConfig = require('../config/SystemConfig.js');
 var sysMsg = require('../util/SystemMsg.js');
 var sysError = require('../util/SystemError.js');
 var lov = require('../util/ListOfValue.js');
+var messageType = require('../util/MessageType.js');
 var serverLogger = require('../util/ServerLogger.js');
 var logger = serverLogger.createLogger('QueueCon.js');
 var sms = require('../bl/SMS.js');
+var orderDao = require('../dao/OrderDAO.js');
 
 var rabbitConnect = null;
 var rabbitChannel = null;
 var keys = [];
-keys.push('*.'+lov.RABBIT_TOPIC_NOTIFICATION);
-keys.push('*.'+lov.RABBIT_TOPIC_ORDER);
+keys.push(messageType.RABBIT_TOPIC_NOTIFICATION);
+keys.push(messageType.RABBIT_TOPIC_ORDER);
 getConnection();
 
 
@@ -74,7 +76,7 @@ function receiveChannelMsg(queue,callback){
                     logger.error("create rabbit channel error :"+error.message);
                     callback(error,null);
                 }else{
-                    ch.assertExchange(lov.RABBIT_EXCHANGE, 'topic', {durable:true});
+                    ch.assertExchange(messageType.RABBIT_EXCHANGE, 'topic', {durable:true});
                     ch.assertQueue('', {exclusive: true,durable:true}, function(err, ok) {
                         if (err !== null) {
                             logger.error("create rabbit queue error :"+err.message);
@@ -86,7 +88,7 @@ function receiveChannelMsg(queue,callback){
                                     logger.error("create rabbit queue error :"+err.message);
                                 }
                                 else if (i < keys.length) {
-                                    ch.bindQueue(queue, lov.RABBIT_EXCHANGE, keys[i], {durable:true}, sub);
+                                    ch.bindQueue(queue, messageType.RABBIT_EXCHANGE, keys[i], {durable:true}, sub);
                                     i++;
                                 }
                             }
@@ -150,13 +152,13 @@ function sendErrorMsg (msg){
             logger.error("sendErrorMsg create rabbit channel error :"+error.message);
 
         }else{
-            ch.assertQueue(lov.RABBIT_QUEUE_ERROR, {durable: true}, function(err, result) {
+            ch.assertQueue(messageType.RABBIT_QUEUE_ERROR, {durable: true}, function(err, result) {
                 if (err !== null) {
                     logger.error("sendErrorMsg create rabbit queue error :"+err.message);
 
 
                 }else{
-                    ch.sendToQueue(lov.RABBIT_QUEUE_ERROR, new Buffer(msg));
+                    ch.sendToQueue(messageType.RABBIT_QUEUE_ERROR, new Buffer(msg));
                     logger.info(" sendErrorMsg send to rabbit success " + msg);
                 }
                 if(ch){ch.close();}
@@ -166,17 +168,37 @@ function sendErrorMsg (msg){
 }
 
 function msgDispatch(msg,callback){
-    if(msg.type == lov.MESSAGE_TYPE_SMS){
-        if(msg.subType == lov.MESSAGE_SUB_TYPE_SIGNIN){
+    if(msg.type == messageType.MESSAGE_TYPE_SMS){
+        if(msg.subType == messageType.MESSAGE_SUB_TYPE_SIGNIN){
             sms.sendSignSms({phone:msg.phone,code:msg.code},function(error,result){
                 callback(error,result);
             })
         }
-        if(msg.subType == lov.MESSAGE_SUB_TYPE_PASSWORD){
+        if(msg.subType == messageType.MESSAGE_SUB_TYPE_PASSWORD){
             sms.sendPasswordSms({phone:msg.phone,code:msg.code},function(error,result){
                 callback(error,result);
             })
         }
+    }else if(msg.type == messageType.MESSAGE_TYPE_ORDER){
+        orderDao.queryOrderWithUser({orderId:msg.orderId},function(error,result){
+            if (error !== null) {
+                logger.error("query order info for message error :"+error.message);
+            }else{
+                if(result && result.length>0){
+                    if(msg.subType == messageType.MESSAGE_ORDER_TAKED){
+                        if(result[0].taker_phone){
+                            sms.sendTakeOrderSms({phone:result[0].sender_phone,orderId:msg.orderId,takeUser:result[0].taker_name,takerUserPhone:result[0].taker_phone},function(){});
+                        }
+                    }else if(msg.subType == messageType.MESSAGE_ORDER_CANCELLED){
+                        sms.sendTakeOrderSms({phone:result[0].taker_phone,orderId:msg.orderId},function(){})
+                    }else if(msg.subType == messageType.MESSAGE_ORDER_FINISHED){
+                        sms.sendTakeOrderSms({phone:result[0].sender_phone,orderId:msg.orderId},function(){})
+                    }
+                }
+            }
+
+        })
+
     }
 }
 
