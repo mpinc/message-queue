@@ -198,7 +198,7 @@ function sendPasswordSms(params,callback){
 }
 
 function sendTakeOrderSms(params,callback){
-    var userInfo = params.takeUser+"("+params.takeUserPhone+")" ;
+    var userInfo = params.takeUser+"("+params.takerUserPhone+")" ;
     var msg ={
         "to": params.phone,
         "appId":sysConfig.smsOptions.appSID,
