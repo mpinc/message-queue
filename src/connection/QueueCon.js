@@ -185,6 +185,7 @@ function msgDispatch(msg,callback){
                 logger.error("query order info for message error :"+error.message);
             }else{
                 if(result && result.length>0){
+                    console.log(msg);
                     if(msg.subType == messageType.MESSAGE_ORDER_TAKED){
                         if(result[0].taker_phone){
                             sms.sendTakeOrderSms({phone:result[0].sender_phone,orderId:msg.orderId,takeUser:result[0].taker_name,takerUserPhone:result[0].taker_phone},function(){});

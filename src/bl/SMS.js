@@ -160,10 +160,10 @@ function httpSend(msg,callback){
             data += d;
         }).on('end',function(){
                 var resObj = eval("(" + data + ")");
-                logger.info("sendSignSms "+resObj);
+                logger.info("httpSend "+resObj);
                 callback(null,resObj);
             }).on('error', function(e) {
-                logger.error("sendSignSms "+ e.message);
+                logger.error("httpSend "+ e.message);
                 callback(e,null);
             });
 
@@ -205,6 +205,7 @@ function sendTakeOrderSms(params,callback){
         "templateId":sysConfig.smsOptions.takedTemplateId,
         "datas":[params.orderId,userInfo]
     };
+    console.log(msg);
     httpSend(msg,callback);
 }
 
