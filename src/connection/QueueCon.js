@@ -184,6 +184,7 @@ function msgDispatch(msg,callback){
             if (error !== null) {
                 logger.error("query order info for message error :"+error.message);
             }else{
+                console.log(result);
                 if(result && result.length>0){
                     console.log(msg);
                     if(msg.subType == messageType.MESSAGE_ORDER_TAKED){
