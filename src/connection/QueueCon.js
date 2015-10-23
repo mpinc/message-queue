@@ -187,7 +187,10 @@ function msgDispatch(msg,callback){
                 if(result && result.length>0){
                     console.log(msg);
                     if(msg.subType == messageType.MESSAGE_ORDER_TAKED){
+                        console.log("subType:11");
+                        console.log(result);
                         if(result[0].taker_phone){
+                            console.log('accept');
                             sms.sendTakeOrderSms({phone:result[0].sender_phone,orderId:msg.orderId,takeUser:result[0].taker_name,takerUserPhone:result[0].taker_phone},function(){});
                         }
                     }else if(msg.subType == messageType.MESSAGE_ORDER_CANCELLED){
