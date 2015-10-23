@@ -190,16 +190,16 @@ function msgDispatch(msg,callback){
                     console.log(msg.subType);
                     console.log(messageType.MESSAGE_ORDER_TAKED);
                     console.log(msg.subType == messageType.MESSAGE_ORDER_TAKED);
-                    if(msg.subType == messageType.MESSAGE_ORDER_TAKED){
+                    if(msg.subType == messageType.MESSAGE_SUB_TYPE_ORDER_ACCEPTED){
                         console.log("subType:11");
                         console.log(result);
                         if(result[0].taker_phone){
                             console.log('accept');
                             sms.sendTakeOrderSms({phone:result[0].sender_phone,orderId:msg.orderId,takeUser:result[0].taker_name,takerUserPhone:result[0].taker_phone},function(){});
                         }
-                    }else if(msg.subType == messageType.MESSAGE_ORDER_CANCELLED){
+                    }else if(msg.subType == messageType.MESSAGE_SUB_TYPE_ORDER_CANCELED){
                         sms.sendTakeOrderSms({phone:result[0].taker_phone,orderId:msg.orderId},function(){})
-                    }else if(msg.subType == messageType.MESSAGE_ORDER_FINISHED){
+                    }else if(msg.subType == messageType.MESSAGE_SUB_TYPE_ORDER_FINISHED){
                         sms.sendTakeOrderSms({phone:result[0].sender_phone,orderId:msg.orderId},function(){})
                     }
                 }
