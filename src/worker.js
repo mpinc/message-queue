@@ -17,3 +17,4 @@ rq.receiveChannelMsg(listOfValue.RABBIT_QUEUE_NORMAL,function(error,result){
         logger.info('success ' +result);
     }
 });
+logger.info("TuoChe message queue start at "+ new Date());
