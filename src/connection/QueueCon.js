@@ -187,7 +187,9 @@ function msgDispatch(msg,callback){
                 console.log(result);
                 console.log(result && result.length>0);
                 if(result && result.length>0){
-                    console.log(msg);
+                    console.log(msg.subType);
+                    console.log(messageType.MESSAGE_ORDER_TAKED);
+                    console.log(msg.subType == messageType.MESSAGE_ORDER_TAKED);
                     if(msg.subType == messageType.MESSAGE_ORDER_TAKED){
                         console.log("subType:11");
                         console.log(result);
