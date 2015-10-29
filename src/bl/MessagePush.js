@@ -1,7 +1,7 @@
 /**
  * Created by ling xue on 15-10-29.
  */
-var xinge = require("Xinge");
+var xinge = require("xinge");
 var xingeUtil = require("../util/XingeUtil.js");
 var sysConfig = require('../config/SystemConfig.js');
 var serverLogger = require('../util/ServerLogger.js');
