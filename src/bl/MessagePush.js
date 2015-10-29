@@ -12,6 +12,8 @@ var XingeApp = new xinge.XingeApp(sysConfig.xingeOptions.accessId, sysConfig.xin
 function pushToSingoAndroidDevice(params,callback){
     var message = xingeUtil.getBaseAndroidMsg(params.title,params.content,xingeUtil.getBaseStyle(),xingeUtil.getBaseAction())
     XingeApp.pushToSingleDevice(params.deviceToken,message,null,function(error,result){
+        console.log(error);
+        console.log(result);
         callback(error,result);
     })
 }
