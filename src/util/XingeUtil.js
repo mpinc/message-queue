@@ -1,7 +1,7 @@
 /**
  * Created by ling xue on 15-10-29.
  */
-var xinge = require("Xinge");
+var xinge = require("xinge");
 var serverLogger = require('../util/ServerLogger.js');
 var logger = serverLogger.createLogger('XingeUtil.js');
 
