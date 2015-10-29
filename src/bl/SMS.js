@@ -6,7 +6,7 @@ var encrypt = require('../util/Encrypt.js');
 var sysConfig = require('../config/SystemConfig.js');
 var https = require("https");
 var serverLogger = require('../util/ServerLogger.js');
-var logger = serverLogger.createLogger('SMSUtil.js');
+var logger = serverLogger.createLogger('SMS.js');
 
 function sendSms(params,callback){
     var d = new Date();
@@ -220,11 +220,12 @@ function sendCancelledOrderSms(params,callback){
 }
 
 function sendFinishedOrderSms(params,callback){
+    var userInfo = params.takeUser+"("+params.takerUserPhone+")" ;
     var msg ={
         "to": params.phone,
         "appId":sysConfig.smsOptions.appSID,
         "templateId":sysConfig.smsOptions.takedTemplateId,
-        "datas":[params.orderId]
+        "datas":[params.orderId,userInfo]
     };
     httpSend(msg,callback);
 }

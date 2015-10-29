@@ -8,10 +8,13 @@ var sysMsg = require('../util/SystemMsg.js');
 var sysError = require('../util/SystemError.js');
 var lov = require('../util/ListOfValue.js');
 var messageType = require('../util/MessageType.js');
+var xingeUtil = require('../util/XingeUtil.js');
 var serverLogger = require('../util/ServerLogger.js');
 var logger = serverLogger.createLogger('QueueCon.js');
 var sms = require('../bl/SMS.js');
 var orderDao = require('../dao/OrderDAO.js');
+var userDeviceDao = require('../dao/UserDeviceDAO.js');
+var messagePush = require('../bl/MessagePush.js');
 
 var rabbitConnect = null;
 var rabbitChannel = null;
@@ -180,7 +183,7 @@ function msgDispatch(msg,callback){
             })
         }
     }else if(msg.type == messageType.MESSAGE_TYPE_ORDER){
-        orderDao.queryOrderWithUser({orderId:msg.orderId},function(error,result){
+        userDeviceDao.getUserDevice({orderId:msg.orderId},function(error,result){
             if (error !== null) {
                 logger.error("query order info for message error :"+error.message);
             }else{
@@ -191,16 +194,22 @@ function msgDispatch(msg,callback){
                     console.log(messageType.MESSAGE_SUB_TYPE_ORDER_ACCEPTED);
                     console.log(msg.subType == messageType.MESSAGE_SUB_TYPE_ORDER_ACCEPTED);
                     if(msg.subType == messageType.MESSAGE_SUB_TYPE_ORDER_ACCEPTED){
-                        console.log("subType:11");
-                        console.log(result);
+                        //console.log("subType:11");
+                        //console.log(result);
                         if(result[0].taker_phone){
-                            console.log('accept');
-                            sms.sendTakeOrderSms({phone:result[0].sender_phone,orderId:msg.orderId,takeUser:result[0].taker_name,takerUserPhone:result[0].taker_phone},function(){});
+                            //console.log('accept');
+                            sms.sendTakeOrderSms({phone:result[0].phone,orderId:msg.orderId,takeUser:result[0].taker_name,takerUserPhone:result[0].taker_phone},function(){});
+                            var content = xingeUtil.getAcceptOrderMessage(msg.orderId,result[0].taker_name +"("+result[0].taker_phone+")");
+                            messagePush.pushToSingoAndroidDevice({title:xingeUtil.ORDER_TITLE_TAKED,content:content},function(){});
                         }
                     }else if(msg.subType == messageType.MESSAGE_SUB_TYPE_ORDER_CANCELED){
-                        sms.sendTakeOrderSms({phone:result[0].taker_phone,orderId:msg.orderId},function(){})
+                        sms.sendCancelledOrderSms({phone:result[0].taker_phone,orderId:msg.orderId},function(){});
+                        var content = xingeUtil.getCancelOrderMessage(msg.orderId);
+                        messagePush.pushToSingoAndroidDevice({title:xingeUtil.ORDER_TITLE_CANCELLED,content:content},function(){})
                     }else if(msg.subType == messageType.MESSAGE_SUB_TYPE_ORDER_FINISHED){
-                        sms.sendTakeOrderSms({phone:result[0].sender_phone,orderId:msg.orderId},function(){})
+                        sms.sendFinishedOrderSms({phone:result[0].phone,orderId:msg.orderId,takeUser:result[0].taker_name,takerUserPhone:result[0].taker_phone},function(){});
+                        var content = xingeUtil.getFinishOrderMessage(msg.orderId,result[0].taker_name +"("+result[0].taker_phone+")");
+                        messagePush.pushToSingoAndroidDevice({title:xingeUtil.ORDER_TITLE_FINISHED,content:content},function(){})
                     }
                 }
             }

@@ -3,6 +3,7 @@
  */
 var sysError = require('./util/SystemError.js');
 var sysMsg = require('./util/SystemMsg.js');
+var messagePush = require('./bl/MessagePush.js');
 var listOfValue = require('./util/ListOfValue.js');
 var serverLogger = require('./util/ServerLogger.js');
 var logger = serverLogger.createLogger('worker.js');
@@ -17,4 +18,14 @@ rq.receiveChannelMsg(listOfValue.RABBIT_QUEUE_NORMAL,function(error,result){
         logger.info('success ' +result);
     }
 });
+/*var paramsObj = {
+    title : '订单被接受',
+    content : '您的派单{1}已被用户{2}接受，请您主动与他联系，并保持电话畅通。',
+    deviceToken : '123755228ce8d5b848dc90574b9181396c00a08d'
+};
+messagePush.pushToSingoAndroidDevice(paramsObj,function(error,result){
+    console.log(error);
+    console.log(result);
+});*/
+
 logger.info("TuoChe message queue start at "+ new Date());

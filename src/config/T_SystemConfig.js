@@ -44,6 +44,13 @@ var mysqlConnectOptions ={
     //,dateStrings : 'DATETIME'
 };
 
+var xingeOptions = {
+    accessId : "2100157755" ,
+    accessKey : "AHV1BV7796TC" ,
+    secretKey : "c1cac06f25844315990ce605d388fe8a",
+    packageName : "com.mp.tuoche"
+}
+
 
 
 module.exports = {
@@ -51,5 +58,6 @@ module.exports = {
     rabbitUrl : rabbitUrl ,
     logLevel : logLevel ,
     loggerConfig : loggerConfig ,
-    mysqlConnectOptions: mysqlConnectOptions
+    mysqlConnectOptions: mysqlConnectOptions,
+    xingeOptions : xingeOptions
 }
