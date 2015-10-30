@@ -202,7 +202,11 @@ function msgDispatch(msg,callback){
                             var content = xingeUtil.getAcceptOrderMessage(msg.orderId,result[0].taker_name +"("+result[0].taker_phone+")");
                             messagePush.pushToSingoAndroidDevice({deviceToken:result[0].sender_device_token,title:xingeUtil.ORDER_TITLE_TAKED,content:content},function(){});
                         }
-                    }else if(msg.subType == messageType.MESSAGE_SUB_TYPE_ORDER_CANCELED){
+                    }else if (msg.subType == messageType.MESSAGE_SUB_TYPE_ORDER_CONFIRMED){
+                        sms.sendConfirmOrderSms({phone:result[0].taker_phone,orderId:msg.orderId},function(){});
+                        var content = xingeUtil.getConfirmOrderMessage(msg.orderId);
+                        messagePush.pushToSingoAndroidDevice({deviceToken:result[0].taker_device_token,title:xingeUtil.ORDER_TITLE_CONFIRM,content:content},function(){});
+                    } else if(msg.subType == messageType.MESSAGE_SUB_TYPE_ORDER_CANCELED){
                         sms.sendCancelledOrderSms({phone:result[0].taker_phone,orderId:msg.orderId},function(){});
                         var content = xingeUtil.getCancelOrderMessage(msg.orderId);
                         messagePush.pushToSingoAndroidDevice({deviceToken:result[0].taker_device_token,title:xingeUtil.ORDER_TITLE_CANCELLED,content:content},function(){})
@@ -213,7 +217,6 @@ function msgDispatch(msg,callback){
                     }
                 }
             }
-
         })
 
     }

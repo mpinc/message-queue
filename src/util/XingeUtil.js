@@ -6,6 +6,7 @@ var serverLogger = require('../util/ServerLogger.js');
 var logger = serverLogger.createLogger('XingeUtil.js');
 
 var ORDER_TITLE_TAKED = "订单被接受";
+var ORDER_TITLE_CONFIRM = "订单被确认";
 var ORDER_TITLE_CANCELLED = "订单被取消";
 var ORDER_TITLE_FINISHED = "订单被完成";
 
@@ -44,8 +45,13 @@ function getAcceptOrderMessage(orderId,username){
     return content;
 }
 
+function getConfirmOrderMessage(orderId){
+    var content = " 您的订单"+orderId+"已被派单方接受，请访问系统查看详细信息。";
+    return content;
+}
+
 function getCancelOrderMessage(orderId){
-    var content = "非常抱歉,您的派单"+orderId+"已被取消，请访问系统查看详细信息";
+    var content = "非常抱歉,您的订单"+orderId+"已被取消，请访问系统查看详细信息";
     return content;
 }
 
@@ -62,7 +68,9 @@ module.exports ={
     getAcceptOrderMessage : getAcceptOrderMessage ,
     getCancelOrderMessage : getCancelOrderMessage ,
     getFinishOrderMessage : getFinishOrderMessage ,
+    getConfirmOrderMessage : getConfirmOrderMessage ,
     ORDER_TITLE_TAKED : ORDER_TITLE_TAKED,
+    ORDER_TITLE_CONFIRM : ORDER_TITLE_CONFIRM ,
     ORDER_TITLE_CANCELLED : ORDER_TITLE_CANCELLED,
     ORDER_TITLE_FINISHED : ORDER_TITLE_FINISHED
 

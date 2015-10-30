@@ -209,6 +209,16 @@ function sendTakeOrderSms(params,callback){
     httpSend(msg,callback);
 }
 
+function sendConfirmOrderSms(params,callback){
+    var msg ={
+        "to": params.phone,
+        "appId":sysConfig.smsOptions.appSID,
+        "templateId":sysConfig.smsOptions.confirmTemplateId,
+        "datas":[params.orderId]
+    };
+    httpSend(msg,callback);
+}
+
 function sendCancelledOrderSms(params,callback){
     var msg ={
         "to": params.phone,
@@ -237,5 +247,6 @@ module.exports = {
     sendPasswordSms : sendPasswordSms ,
     sendTakeOrderSms : sendTakeOrderSms ,
     sendCancelledOrderSms : sendCancelledOrderSms ,
-    sendFinishedOrderSms : sendFinishedOrderSms
+    sendFinishedOrderSms : sendFinishedOrderSms ,
+    sendConfirmOrderSms : sendConfirmOrderSms
 }

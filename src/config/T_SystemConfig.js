@@ -12,6 +12,7 @@ var smsOptions = {
     signTemplateId : 37356,
     pswdTemplateId : 37351 ,
     takedTemplateId : 43284 ,
+    confirmTemplateId : 45793 ,
     cancelledTemplateId : 43285 ,
     finishedTemplateId : 44175 ,
     server  : 'app.cloopen.com',
