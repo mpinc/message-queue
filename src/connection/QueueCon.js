@@ -176,9 +176,16 @@ function msgDispatch(msg,callback){
             sms.sendSignSms({phone:msg.phone,code:msg.code},function(error,result){
                 callback(error,result);
             })
-        }
-        if(msg.subType == messageType.MESSAGE_SUB_TYPE_PASSWORD){
+        }else if(msg.subType == messageType.MESSAGE_SUB_TYPE_PASSWORD){
             sms.sendPasswordSms({phone:msg.phone,code:msg.code},function(error,result){
+                callback(error,result);
+            })
+        }else if(msg.subType == messageType.MESSAGE_SUB_TYPE_VERIFY_CONFIRM){
+            sms.sendConfirmVerifySms({phone:msg.phone},function(error,result){
+                callback(error,result);
+            })
+        }else if(msg.subType == messageType.MESSAGE_SUB_TYPE_VERIFY_REJECT){
+            sms.sendRejectVerifySms({phone:msg.phone},function(error,result){
                 callback(error,result);
             })
         }
@@ -187,33 +194,32 @@ function msgDispatch(msg,callback){
             if (error !== null) {
                 logger.error("query order info for message error :"+error.message);
             }else{
-                console.log(result);
-                console.log(result && result.length>0);
                 if(result && result.length>0){
                     console.log(msg.subType);
                     console.log(messageType.MESSAGE_SUB_TYPE_ORDER_ACCEPTED);
                     console.log(msg.subType == messageType.MESSAGE_SUB_TYPE_ORDER_ACCEPTED);
                     if(msg.subType == messageType.MESSAGE_SUB_TYPE_ORDER_ACCEPTED){
-                        //console.log("subType:11");
-                        //console.log(result);
-                        if(result[0].taker_phone){
-                            //console.log('accept');
-                            sms.sendTakeOrderSms({phone:result[0].phone,orderId:msg.orderId,takeUser:result[0].taker_name,takerUserPhone:result[0].taker_phone},function(){});
-                            var content = xingeUtil.getAcceptOrderMessage(msg.orderId,result[0].taker_name +"("+result[0].taker_phone+")");
-                            messagePush.pushToSingoAndroidDevice({deviceToken:result[0].sender_device_token,title:xingeUtil.ORDER_TITLE_TAKED,content:content},function(){});
-                        }
+                        sms.sendTakeOrderSms({phone:result[0].phone,orderId:msg.orderId,takeUser:result[0].taker_name,takerUserPhone:result[0].taker_phone},sendSmsCallback);
+                        var content = xingeUtil.getAcceptOrderMessage(msg.orderId,result[0].taker_name +"("+result[0].taker_phone+")");
+                        messagePush.pushToSingoAndroidDevice({deviceToken:result[0].sender_device_token,title:xingeUtil.ORDER_TITLE_TAKED,content:content},pushAndroidCallback);
                     }else if (msg.subType == messageType.MESSAGE_SUB_TYPE_ORDER_CONFIRMED){
-                        sms.sendConfirmOrderSms({phone:result[0].taker_phone,orderId:msg.orderId},function(){});
+                        sms.sendConfirmOrderSms({phone:result[0].taker_phone,orderId:msg.orderId},sendSmsCallback);
                         var content = xingeUtil.getConfirmOrderMessage(msg.orderId);
-                        messagePush.pushToSingoAndroidDevice({deviceToken:result[0].taker_device_token,title:xingeUtil.ORDER_TITLE_CONFIRM,content:content},function(){});
+                        messagePush.pushToSingoAndroidDevice({deviceToken:result[0].taker_device_token,title:xingeUtil.ORDER_TITLE_CONFIRM,content:content},pushAndroidCallback);
                     } else if(msg.subType == messageType.MESSAGE_SUB_TYPE_ORDER_CANCELED){
-                        sms.sendCancelledOrderSms({phone:result[0].taker_phone,orderId:msg.orderId},function(){});
+                        sms.sendCancelledOrderSms({phone:result[0].taker_phone,orderId:msg.orderId},sendSmsCallback);
                         var content = xingeUtil.getCancelOrderMessage(msg.orderId);
-                        messagePush.pushToSingoAndroidDevice({deviceToken:result[0].taker_device_token,title:xingeUtil.ORDER_TITLE_CANCELLED,content:content},function(){})
+                        messagePush.pushToSingoAndroidDevice({deviceToken:result[0].taker_device_token,title:xingeUtil.ORDER_TITLE_CANCELLED,content:content},pushAndroidCallback)
                     }else if(msg.subType == messageType.MESSAGE_SUB_TYPE_ORDER_FINISHED){
-                        sms.sendFinishedOrderSms({phone:result[0].phone,orderId:msg.orderId,takeUser:result[0].taker_name,takerUserPhone:result[0].taker_phone},function(){});
+                        sms.sendFinishedOrderSms({phone:result[0].phone,orderId:msg.orderId,takeUser:result[0].taker_name,takerUserPhone:result[0].taker_phone},sendSmsCallback);
                         var content = xingeUtil.getFinishOrderMessage(msg.orderId,result[0].taker_name +"("+result[0].taker_phone+")");
-                        messagePush.pushToSingoAndroidDevice({deviceToken:result[0].sender_device_token,title:xingeUtil.ORDER_TITLE_FINISHED,content:content},function(){})
+                        messagePush.pushToSingoAndroidDevice({deviceToken:result[0].sender_device_token,title:xingeUtil.ORDER_TITLE_FINISHED,content:content},pushAndroidCallback)
+                    }else if(msg.subType == messageType.MESSAGE_SUB_TYPE_ORDER_CONTAINER){
+                        msg.phone = result[0].phone;
+                        sms.sendOrderContainerSms(msg,sendSmsCallback);
+                        var content = xingeUtil.getOrderContainerMessage(msg.orderId,msg.containerId,msg.sealId);
+                        messagePush.pushToSingoAndroidDevice({deviceToken:result[0].sender_device_token,title:xingeUtil.ORDER_INFO_TITLE,content:content},pushAndroidCallback)
+
                     }
                 }
             }
@@ -222,6 +228,17 @@ function msgDispatch(msg,callback){
     }
 }
 
+function sendSmsCallback(error,result){
+    if(error){
+        logger.error("sendSmsCallback" +JSON.stringify(error));
+    }
+}
+
+function pushAndroidCallback(error,result){
+    if(error){
+        logger.error("pushAndroidCallback" +JSON.stringify(error));
+    }
+}
 module.exports = {
     sendChannelMsg : sendChannelMsg,
     receiveChannelMsg : receiveChannelMsg

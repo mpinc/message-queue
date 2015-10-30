@@ -10,6 +10,13 @@ var ORDER_TITLE_CONFIRM = "订单被确认";
 var ORDER_TITLE_CANCELLED = "订单被取消";
 var ORDER_TITLE_FINISHED = "订单被完成";
 
+var ORDER_INFO_TITLE = "订单信息";
+
+
+
+var USER_VERIFY_TITLE_CONFIRM = "验证申请通过";
+var USER_VERIFY_TITLE_REJECT = "验证申请驳回";
+
 function getBaseStyle(){
     var style = new xinge.Style();
     style.ring = 1;
@@ -56,7 +63,22 @@ function getCancelOrderMessage(orderId){
 }
 
 function getFinishOrderMessage(orderId,username){
-    var content = "您的派单"+orderId+"已被用户"+username+"完成,请注意查收并对本次派单做出评价。"
+    var content = "您的派单"+orderId+"已被用户"+username+"完成,请注意查收并对本次派单做出评价。";
+    return content;
+}
+
+function getConfirmVerifyMessage(){
+    var content = "您的注册验证已被审核通过，您可以访问奔奔集运，进行派单与抢单。";
+    return content;
+}
+
+function getRejectVerifyMessage(){
+    var content = "很抱歉的通知您的注册申请没有通过验证，请重新提交申请。";
+    return content;
+}
+
+function getOrderContainerMessage(orderId,containerId,sealId){
+    var content = "您的订单"+orderId+"已经提取集装箱和封条,集装箱号"+containerId+"和封条号"+sealId+",请您确认。";
     return content;
 }
 
@@ -72,6 +94,12 @@ module.exports ={
     ORDER_TITLE_TAKED : ORDER_TITLE_TAKED,
     ORDER_TITLE_CONFIRM : ORDER_TITLE_CONFIRM ,
     ORDER_TITLE_CANCELLED : ORDER_TITLE_CANCELLED,
-    ORDER_TITLE_FINISHED : ORDER_TITLE_FINISHED
+    ORDER_TITLE_FINISHED : ORDER_TITLE_FINISHED ,
+    ORDER_INFO_TITLE : ORDER_INFO_TITLE ,
+    USER_VERIFY_TITLE_CONFIRM : USER_VERIFY_TITLE_CONFIRM ,
+    USER_VERIFY_TITLE_REJECT : USER_VERIFY_TITLE_REJECT ,
+    getConfirmVerifyMessage : getConfirmVerifyMessage ,
+    getRejectVerifyMessage : getRejectVerifyMessage ,
+    getOrderContainerMessage : getOrderContainerMessage
 
 }

@@ -240,6 +240,36 @@ function sendFinishedOrderSms(params,callback){
     httpSend(msg,callback);
 }
 
+function sendConfirmVerifySms(params,callback){
+    var msg ={
+        "to": params.phone,
+        "appId":sysConfig.smsOptions.appSID,
+        "templateId":sysConfig.smsOptions.confirmVerifyTemplateId,
+        "datas":[]
+    };
+    httpSend(msg,callback);
+}
+
+function sendRejectVerifySms(params,callback){
+    var msg ={
+        "to": params.phone,
+        "appId":sysConfig.smsOptions.appSID,
+        "templateId":sysConfig.smsOptions.rejectVerifyTemplateId,
+        "datas":[]
+    };
+    httpSend(msg,callback);
+}
+
+function sendOrderContainerSms(params,callback){
+    var msg ={
+        "to": params.phone,
+        "appId":sysConfig.smsOptions.appSID,
+        "templateId":sysConfig.smsOptions.orderContainerTemplateId,
+        "datas":[params.orderId,params.containerId,params.sealId]
+    };
+    httpSend(msg,callback);
+}
+
 module.exports = {
     sendSms : sendSms ,
     getAccountInfo: getAccountInfo ,
@@ -248,5 +278,8 @@ module.exports = {
     sendTakeOrderSms : sendTakeOrderSms ,
     sendCancelledOrderSms : sendCancelledOrderSms ,
     sendFinishedOrderSms : sendFinishedOrderSms ,
-    sendConfirmOrderSms : sendConfirmOrderSms
+    sendConfirmOrderSms : sendConfirmOrderSms ,
+    sendConfirmVerifySms : sendConfirmVerifySms ,
+    sendRejectVerifySms : sendRejectVerifySms ,
+    sendOrderContainerSms : sendOrderContainerSms
 }
