@@ -190,7 +190,7 @@ function msgDispatch(msg,callback){
             })
         }
     }else if(msg.type == messageType.MESSAGE_TYPE_ORDER){
-        userDeviceDao.getUserDevice({orderId:msg.orderId},function(error,result){
+        userDeviceDao.getUserOrderDevice({orderId:msg.orderId},function(error,result){
             if (error !== null) {
                 logger.error("query order info for message error :"+error.message);
             }else{
@@ -218,13 +218,31 @@ function msgDispatch(msg,callback){
                         msg.phone = result[0].phone;
                         sms.sendOrderContainerSms(msg,sendSmsCallback);
                         var content = xingeUtil.getOrderContainerMessage(msg.orderId,msg.containerId,msg.sealId);
-                        messagePush.pushToSingoAndroidDevice({deviceToken:result[0].sender_device_token,title:xingeUtil.ORDER_INFO_TITLE,content:content},pushAndroidCallback)
-
+                        messagePush.pushToSingoAndroidDevice({deviceToken:result[0].sender_device_token,title:xingeUtil.ORDER_INFO_TITLE,content:content},pushAndroidCallback);
                     }
                 }
             }
         })
-
+    }else if(msg.type == messageType.MESSAGE_TYPE_USER){
+        userDeviceDao.getUserBaseDevice({userId:msg.userId},function(error,rows){
+            if (error !== null) {
+                logger.error("query user info for message error :"+error.message);
+            }else{
+                if(rows && rows.length>0){
+                    var userPhone = rows[0].phone;
+                    var userDevice = rows[0].device_token;
+                    if(msg.subType == messageType.MESSAGE_SUB_TYPE_VERIFY_CONFIRM){
+                        sms.sendConfirmVerifySms({phone:userPhone},sendSmsCallback)
+                        var content = xingeUtil.getConfirmVerifyMessage();
+                        messagePush.pushToSingoAndroidDevice({deviceToken:userDevice,title:xingeUtil.USER_VERIFY_TITLE_CONFIRM,content:content},pushAndroidCallback);
+                    }else if(msg.subType == messageType.MESSAGE_SUB_TYPE_VERIFY_REJECT){
+                        sms.sendRejectVerifySms({phone:userPhone},sendSmsCallback);
+                        var content = xingeUtil.getRejectVerifyMessage();
+                        messagePush.pushToSingoAndroidDevice({deviceToken:userDevice,title:xingeUtil.USER_VERIFY_TITLE_REJECT,content:content},pushAndroidCallback);
+                    }
+                }
+            }
+        })
     }
 }
 
