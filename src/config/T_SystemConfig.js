@@ -49,7 +49,7 @@ var mysqlConnectOptions ={
 };
 
 var xingeOptions = {
-    accessId : "2100157755" ,
+    accessId : 2100157755 ,
     accessKey : "AHV1BV7796TC" ,
     secretKey : "c1cac06f25844315990ce605d388fe8a",
     packageName : "com.mp.tuoche"
