@@ -29,7 +29,7 @@ var loggerConfig = {
         { type: 'console' }
         ,{
          type: 'file',
-         filename: './logs/access.log',
+         filename: '/usr/logs/tuoche/message.log',
          maxLogSize: '4m',
          backups:4
          }
