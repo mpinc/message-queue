@@ -17,6 +17,9 @@ var ORDER_INFO_TITLE = "订单信息";
 var USER_VERIFY_TITLE_CONFIRM = "验证申请通过";
 var USER_VERIFY_TITLE_REJECT = "验证申请驳回";
 
+var ANDROID_ACTIVITY_DEFAULT = 'EntryActivity';
+var ANDROID_ACTIVITY_CURRENT = 'CurrentQiangDanActivity';
+var ANDROID_ACTIVITY_HISTORY = 'PaiDanHistoryDetailActivity';
 function getBaseStyle(){
     var style = new xinge.Style();
     style.ring = 1;
@@ -33,12 +36,21 @@ function getBaseAction(){
     return action;
 }
 
+
+
 function getBaseAndroidMsg(title,content,style,action){
     var androidMessage = new xinge.AndroidMessage();
     androidMessage.type = xinge.MESSAGE_TYPE_NOTIFICATION;
     androidMessage.title = title;
     androidMessage.content = content;
     androidMessage.style = style;
+    if(title==ORDER_TITLE_TAKED || title == ORDER_TITLE_CONFIRM){
+        action.activity = ANDROID_ACTIVITY_CURRENT;
+    }else if(title == ORDER_TITLE_FINISHED){
+        action.activity = ANDROID_ACTIVITY_HISTORY;
+    }else{
+        action.activity = ANDROID_ACTIVITY_DEFAULT;
+    }
     androidMessage.action = action;
     androidMessage.expireTime = 2*60*60;
     androidMessage.multiPkg = 0;
