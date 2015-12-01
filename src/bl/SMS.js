@@ -265,7 +265,7 @@ function sendOrderContainerSms(params,callback){
         "to": params.phone,
         "appId":sysConfig.smsOptions.appSID,
         "templateId":sysConfig.smsOptions.orderContainerTemplateId,
-        "datas":[params.orderId,params.containerId,params.sealId]
+        "datas":[params.orderId,params.cabinId,params.containerId,params.sealId]
     };
     httpSend(msg,callback);
 }

@@ -217,7 +217,7 @@ function msgDispatch(msg,callback){
                     }else if(msg.subType == messageType.MESSAGE_SUB_TYPE_ORDER_CONTAINER){
                         msg.phone = result[0].phone;
                         sms.sendOrderContainerSms(msg,sendSmsCallback);
-                        var content = xingeUtil.getOrderContainerMessage(msg.orderId,msg.containerId,msg.sealId);
+                        var content = xingeUtil.getOrderContainerMessage(msg.orderId,msg.cabinId,msg.containerId,msg.sealId);
                         messagePush.pushToSingoAndroidDevice({deviceToken:result[0].sender_device_token,title:xingeUtil.ORDER_INFO_TITLE,content:content},pushAndroidCallback);
                     }
                 }

@@ -89,8 +89,8 @@ function getRejectVerifyMessage(){
     return content;
 }
 
-function getOrderContainerMessage(orderId,containerId,sealId){
-    var content = "您的订单"+orderId+"已经提取集装箱和封条,集装箱号"+containerId+"和封条号"+sealId+",请您确认。";
+function getOrderContainerMessage(orderId,cabinId,containerId,sealId){
+    var content = "您的订单"+orderId+"已经提取集装箱和封条,订舱号"+cabinId+"、集装箱号"+containerId+"和封条号"+sealId+",请您确认。";
     return content;
 }
 
