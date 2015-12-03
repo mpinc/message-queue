@@ -4,15 +4,16 @@
         "description": "mission public message queue project",
         "main": "timerStat.js",
         "dependencies": {
-                "seq": "0.3.5",
-				"later"	: "*",
-				"mysql"	: "*",
-                "request": "*",
-                "restify": "2.8.5",
-                "restify-errors" :"*",
-                "log4js" : "0.6.21" ,
-                "amqplib" : "0.4.0",
-                "xinge" : "1.1.3"
+            "apn" : "1.7.3",
+            "seq": "0.3.5",
+            "later"	: "*",
+            "mysql"	: "*",
+            "request": "*",
+            "restify": "2.8.5",
+            "restify-errors" :"*",
+            "log4js" : "0.6.21" ,
+            "amqplib" : "0.4.0",
+            "xinge" : "1.1.3"
         },
         "author": "Ling Xue",
         "license": ""
