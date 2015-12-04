@@ -195,14 +195,18 @@ function msgDispatch(msg,callback){
                 logger.error("query order info for message error :"+error.message);
             }else{
                 if(result && result.length>0){
-                    console.log(msg.subType);
-                    console.log(messageType.MESSAGE_SUB_TYPE_ORDER_ACCEPTED);
-                    console.log(msg.subType == messageType.MESSAGE_SUB_TYPE_ORDER_ACCEPTED);
+                    //console.log(msg.subType);
+                    //console.log(messageType.MESSAGE_SUB_TYPE_ORDER_ACCEPTED);
+                    //console.log(msg.subType == messageType.MESSAGE_SUB_TYPE_ORDER_ACCEPTED);
+                    var androidArray =[];
+                    var iosArray = [];
+                    var smsArray = [];
                     if(msg.subType == messageType.MESSAGE_SUB_TYPE_ORDER_ACCEPTED){
                         sms.sendTakeOrderSms({phone:result[0].phone,orderId:msg.orderId,takeUser:result[0].taker_name,takerUserPhone:result[0].taker_phone},sendSmsCallback);
                         var content = xingeUtil.getAcceptOrderMessage(msg.orderId,result[0].taker_name +"("+result[0].taker_phone+")");
                         for(var i=0;i<result.length;i++){
-                            if(result[i].sender_device_type == lov.DEVICE_TYPE_ANDRIOD){
+                            if(result[i].sender_device_type == lov.DEVICE_TYPE_ANDRIOD && androidArray.indexOf(result[i].sender_device_token)<0){
+                                androidArray.push(result[i].sender_device_token);
                                 messagePush.pushToSingoAndroidDevice(
                                     {deviceToken:result[i].sender_device_token,title:xingeUtil.ORDER_TITLE_TAKED,content:content},pushAndroidCallback);
                             }else{
@@ -213,7 +217,8 @@ function msgDispatch(msg,callback){
                         sms.sendConfirmOrderSms({phone:result[0].taker_phone,orderId:msg.orderId},sendSmsCallback);
                         var content = xingeUtil.getConfirmOrderMessage(msg.orderId);
                         for(var i=0;i<result.length;i++){
-                            if(result[i].taker_device_type == lov.DEVICE_TYPE_ANDRIOD){
+                            if(result[i].taker_device_type == lov.DEVICE_TYPE_ANDRIOD&& androidArray.indexOf(result[i].taker_device_token)<0){
+                                androidArray.push(result[i].taker_device_token);
                                 messagePush.pushToSingoAndroidDevice(
                                     {deviceToken:result[i].taker_device_token,title:xingeUtil.ORDER_TITLE_CONFIRM,content:content},pushAndroidCallback);
                             }else{
@@ -224,7 +229,8 @@ function msgDispatch(msg,callback){
                         sms.sendCancelledOrderSms({phone:result[0].taker_phone,orderId:msg.orderId},sendSmsCallback);
                         var content = xingeUtil.getCancelOrderMessage(msg.orderId);
                         for(var i=0;i<result.length;i++){
-                            if(result[i].taker_device_type == lov.DEVICE_TYPE_ANDRIOD){
+                            if(result[i].taker_device_type == lov.DEVICE_TYPE_ANDRIOD&& androidArray.indexOf(result[i].taker_device_token)<0){
+                                androidArray.push(result[i].taker_device_token)
                                 messagePush.pushToSingoAndroidDevice(
                                     {deviceToken:result[i].taker_device_token,title:xingeUtil.ORDER_TITLE_CANCELLED,content:content},pushAndroidCallback)
                             }else{
@@ -235,7 +241,8 @@ function msgDispatch(msg,callback){
                         sms.sendFinishedOrderSms({phone:result[0].phone,orderId:msg.orderId,takeUser:result[0].taker_name,takerUserPhone:result[0].taker_phone},sendSmsCallback);
                         var content = xingeUtil.getFinishOrderMessage(msg.orderId,result[0].taker_name +"("+result[0].taker_phone+")");
                         for(var i=0;i<result.length;i++){
-                            if(result[i].sender_device_type == lov.DEVICE_TYPE_ANDRIOD){
+                            if(result[i].sender_device_type == lov.DEVICE_TYPE_ANDRIOD&& androidArray.indexOf(result[i].sender_device_token)<0){
+                                androidArray.push(result[i].sender_device_token)
                                 messagePush.pushToSingoAndroidDevice(
                                     {deviceToken:result[i].sender_device_token,title:xingeUtil.ORDER_TITLE_FINISHED,content:content},pushAndroidCallback)
                             }else{
@@ -247,7 +254,8 @@ function msgDispatch(msg,callback){
                         sms.sendOrderContainerSms(msg,sendSmsCallback);
                         var content = xingeUtil.getOrderContainerMessage(msg.orderId,msg.cabinId,msg.containerId,msg.sealId);
                         for(var i=0;i<result.length;i++){
-                            if(result[i].sender_device_type == lov.DEVICE_TYPE_ANDRIOD){
+                            if(result[i].sender_device_type == lov.DEVICE_TYPE_ANDRIOD&& androidArray.indexOf(result[i].sender_device_token)<0){
+                                androidArray.push(result[i].sender_device_token);
                                 messagePush.pushToSingoAndroidDevice(
                                     {deviceToken:result[i].sender_device_token,title:xingeUtil.ORDER_INFO_TITLE,content:content},pushAndroidCallback);
                             }else{

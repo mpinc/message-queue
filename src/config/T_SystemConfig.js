@@ -55,6 +55,13 @@ var xingeOptions = {
     packageName : "com.mp.tuoche"
 }
 
+var iosPushConfig ={
+    production: false,
+    cert: 'E:/WebStormWorkSpace/bizwise/cert.pem',
+    key : 'E:/WebStormWorkSpace/bizwise/key.pem',
+    gateway: 'gateway.sandbox.push.apple.com' ,
+    messageFrom : '奔奔集运'
+}
 
 
 module.exports = {
@@ -63,5 +70,6 @@ module.exports = {
     logLevel : logLevel ,
     loggerConfig : loggerConfig ,
     mysqlConnectOptions: mysqlConnectOptions,
-    xingeOptions : xingeOptions
+    xingeOptions : xingeOptions ,
+    iosPushConfig : iosPushConfig
 }
