@@ -26,7 +26,7 @@ function pushToSingleIosDevice(params,callback){
     var message = new apn.notification();
     var device = new apn.Device(params.deviceToken);
     message.setAlertText(params.title);
-    message.badge = params.badge
+    message.badge = 1;
     message.sound = "ping.aiff";
     message.payload = {'messageFrom': sysConfig.iosPushConfig.messageFrom};
     message.expiry = Math.floor(Date.now() / 1000) + 3600;
