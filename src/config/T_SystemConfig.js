@@ -17,7 +17,7 @@ var smsOptions = {
     finishedTemplateId : 44175 ,
     confirmVerifyTemplateId : 45911,
     rejectVerifyTemplateId : 45912,
-    orderContainerTemplateId : 45934,
+    orderContainerTemplateId : 52516,
     server  : 'app.cloopen.com',
     port : '8883'
 }
