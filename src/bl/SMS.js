@@ -223,7 +223,7 @@ function sendCancelledOrderSms(params,callback){
     var msg ={
         "to": params.phone,
         "appId":sysConfig.smsOptions.appSID,
-        "templateId":sysConfig.smsOptions.takedTemplateId,
+        "templateId":sysConfig.smsOptions.cancelledTemplateId,
         "datas":[params.orderId]
     };
     httpSend(msg,callback);
