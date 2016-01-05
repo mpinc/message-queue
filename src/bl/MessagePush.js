@@ -24,6 +24,7 @@ function pushToSingoAndroidDevice(params,callback){
 
 function pushToSingleIosDevice(params,callback){
     var message = new apn.notification();
+    console.log("push to ios device :"+params.deviceToken);
     var device = new apn.Device(params.deviceToken);
     message.setAlertText(params.title);
     message.badge = 1;
