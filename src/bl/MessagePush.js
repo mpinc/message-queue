@@ -23,7 +23,7 @@ function pushToSingoAndroidDevice(params,callback){
 
 
 function pushToSingleIosDevice(params,callback){
-    if(params.deviceToken){
+    if( !params.deviceToken ){
       return callback(null,{success:true});
     }
     var message = new apn.notification();
