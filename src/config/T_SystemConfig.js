@@ -39,6 +39,13 @@ var loggerConfig = {
 
 var rabbitUrl = 'amqp://127.0.0.1' ;
 
+var fhuSmsTpls = {
+    appSID : '8a48b55151f715fb01520a2a15e11bbd',
+    appToken : 'd5ae38194781dd60656a85cc4fcac030',
+    signTemplateId : 59911,
+    pswdTemplateId : 59913
+}
+
 var mysqlConnectOptions ={
     user: 'ti',
     password: 'tuoche',
@@ -71,5 +78,6 @@ module.exports = {
     loggerConfig : loggerConfig ,
     mysqlConnectOptions: mysqlConnectOptions,
     xingeOptions : xingeOptions ,
-    iosPushConfig : iosPushConfig
+    iosPushConfig : iosPushConfig ,
+    fhuSmsTpls : fhuSmsTpls
 }

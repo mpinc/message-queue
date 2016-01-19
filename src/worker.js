@@ -18,6 +18,15 @@ rq.receiveChannelMsg(listOfValue.RABBIT_QUEUE_NORMAL,function(error,result){
         logger.info('success ' +result);
     }
 });
+
+rq.receiveFhuChannelMsg(listOfValue.RABBIT_QUEUE_FOR_FHU,function(error,result){
+    if (error) {
+        logger.error(' createOrder ' + error.message);
+        throw sysError.InternalError(error.message,sysMsg.SYS_INTERNAL_ERROR_MSG);
+    } else {
+        logger.info('success ' +result);
+    }
+});
 /*var paramsObj = {
     title : '订单被接受',
     content : '您的派单{1}已被用户{2}接受，请您主动与他联系，并保持电话畅通。',

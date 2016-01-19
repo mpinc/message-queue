@@ -186,7 +186,25 @@ function sendSignSms(params,callback){
     httpSend(msg,callback);
 }
 
+function  sendSignSmsForFhu(params,callback){
+    var msg ={
+        "to": params.phone,
+        "appId":sysConfig.fhuSmsTpls.appSID,
+        "templateId":sysConfig.fhuSmsTpls.signTemplateId,
+        "datas":[params.code,'15']
+    };
+    httpSend(msg,callback);
+}
 
+function sendPasswordSmsForFhu(params,callback){
+    var msg ={
+        "to": params.phone,
+        "appId":sysConfig.fhuSmsTpls.appSID,
+        "templateId":sysConfig.fhuSmsTpls.pswdTemplateId,
+        "datas":[params.code,'15']
+    };
+    httpSend(msg,callback);
+}
 function sendPasswordSms(params,callback){
     var msg ={
         "to": params.phone,
@@ -281,5 +299,7 @@ module.exports = {
     sendConfirmOrderSms : sendConfirmOrderSms ,
     sendConfirmVerifySms : sendConfirmVerifySms ,
     sendRejectVerifySms : sendRejectVerifySms ,
-    sendOrderContainerSms : sendOrderContainerSms
+    sendOrderContainerSms : sendOrderContainerSms ,
+    sendSignSmsForFhu : sendSignSmsForFhu ,
+    sendPasswordSmsForFhu : sendPasswordSmsForFhu
 }
