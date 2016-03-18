@@ -213,6 +213,72 @@ function receiveFhuChannelMsg(queue,callback){
 
 }
 
+function receiveChumuuChannelMsg(queue,callback){
+    amqp.connect(sysConfig.rabbitUrl,function(error,rabbitConnect){
+        if(error){
+            logger.error("Connect rabbit error :"+error.message);
+            if (rabbitConnect) rabbitConnect.close(function() { process.exit(1); });
+            return null;
+        }else{
+            rabbitConnect.createChannel(function(error,ch){
+                if(error){
+                    logger.error("create rabbit channel error :"+error.message);
+                    callback(error,null);
+                }else{
+                    ch.assertExchange(messageType.RABBIT_EXCHANGE_FOR_CHUMUU, 'topic', {durable:true});
+                    ch.assertQueue('', {exclusive: true,durable:true}, function(err, ok) {
+                        if (err !== null) {
+                            logger.error("create rabbit queue error :"+err.message);
+
+                        }else{
+                            var queue = ok.queue,i=0;
+                            function sub(err) {
+                                if (err !== null) {
+                                    logger.error("create rabbit queue error :"+err.message);
+                                }
+                                else if (i < keys.length) {
+                                    ch.bindQueue(queue, messageType.RABBIT_EXCHANGE_FOR_CHUMUU, keys[i], {durable:true}, sub);
+                                    i++;
+                                }
+                            }
+                            ch.consume(queue, doWork, {noAck: false,durable:true}, function(err) {
+                                if (err !== null) {
+                                    logger.error("create rabbit queue error :"+err.message);
+                                }else{
+                                    sub(null);
+                                }
+                            });
+                        }
+                    })
+                    function doWork(msg) {
+                        var body = msg.content.toString();
+                        try{
+                            var msgObj = eval('('+body+')');
+                            //TODO msg logic
+                            logger.info("  Received Msg :"+msgObj);
+                            msgDisPatchForChumuu(msgObj,function(error,result){
+                                if(error){
+                                    logger.error("receiveChumuuChannelMsg dispatch " + error.message);
+                                    sendErrorMsg(msg);
+                                }else{
+                                    logger.info("receiveChumuuChannelMsg dispatch success " );
+                                }
+                                ch.ack(msg);
+                            })
+
+                        }catch(error ){
+                            logger.error(error);
+                            sendErrorMsg(msg);
+                            ch.ack(msg);
+                        }
+                    }
+                }
+            })
+
+        }
+    })
+
+}
 function sendErrorMsg (msg){
     if(rabbitConnect == null){
         logger.error("sendErrorMsg can not connect rabbit :" + sysMsg.SYS_MESSAGE_QUEUE_ERROR_MSG);
@@ -245,6 +311,21 @@ function msgDisPatchForFhu(msg,callback){
             })
         }else if(msg.subType == messageType.MESSAGE_SUB_TYPE_PASSWORD){
             sms.sendPasswordSmsForFhu({phone:msg.phone,code:msg.code},function(error,result){
+                callback(error,result);
+            })
+        }
+    }else{
+        callback(null,{success:true});
+    }
+}
+function msgDisPatchForChumuu(msg,callback){
+    if(msg.type == messageType.MESSAGE_TYPE_SMS){
+        if(msg.subType == messageType.MESSAGE_SUB_TYPE_SIGNIN){
+            sms.sendSignSmsForChumuu({phone:msg.phone,code:msg.code},function(error,result){
+                callback(error,result);
+            })
+        }else if(msg.subType == messageType.MESSAGE_SUB_TYPE_PASSWORD){
+            sms.sendPasswordSmsForChumuu({phone:msg.phone,code:msg.code},function(error,result){
                 callback(error,result);
             })
         }
@@ -424,5 +505,6 @@ function pushIosCallback(error,result){
 module.exports = {
     sendChannelMsg : sendChannelMsg,
     receiveChannelMsg : receiveChannelMsg ,
-    receiveFhuChannelMsg : receiveFhuChannelMsg
+    receiveFhuChannelMsg : receiveFhuChannelMsg ,
+    receiveChumuuChannelMsg : receiveChumuuChannelMsg
 }

@@ -12,7 +12,7 @@ var rq = require('./connection/QueueCon.js');
 
 rq.receiveChannelMsg(listOfValue.RABBIT_QUEUE_NORMAL,function(error,result){
     if (error) {
-        logger.error(' createOrder ' + error.message);
+        logger.error(' listen ti message queue ' + error.message);
         throw sysError.InternalError(error.message,sysMsg.SYS_INTERNAL_ERROR_MSG);
     } else {
         logger.info('success ' +result);
@@ -21,7 +21,16 @@ rq.receiveChannelMsg(listOfValue.RABBIT_QUEUE_NORMAL,function(error,result){
 
 rq.receiveFhuChannelMsg(listOfValue.RABBIT_QUEUE_FOR_FHU,function(error,result){
     if (error) {
-        logger.error(' createOrder ' + error.message);
+        logger.error(' listen flyhighus message queue ' + error.message);
+        throw sysError.InternalError(error.message,sysMsg.SYS_INTERNAL_ERROR_MSG);
+    } else {
+        logger.info('success ' +result);
+    }
+});
+
+rq.receiveChumuuChannelMsg(listOfValue.RABBIT_QUEUE_FOR_CHUMUU,function(error,result){
+    if (error) {
+        logger.error(' listen chumuu message queue ' + error.message);
         throw sysError.InternalError(error.message,sysMsg.SYS_INTERNAL_ERROR_MSG);
     } else {
         logger.info('success ' +result);

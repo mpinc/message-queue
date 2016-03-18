@@ -205,6 +205,26 @@ function sendPasswordSmsForFhu(params,callback){
     };
     httpSend(msg,callback);
 }
+
+function  sendSignSmsForChumuu(params,callback){
+    var msg ={
+        "to": params.phone,
+        "appId":sysConfig.chumuuSmsTpls.appSID,
+        "templateId":sysConfig.chumuuSmsTpls.signTemplateId,
+        "datas":[params.code,'15']
+    };
+    httpSend(msg,callback);
+}
+
+function sendPasswordSmsForChumuu(params,callback){
+    var msg ={
+        "to": params.phone,
+        "appId":sysConfig.chumuuSmsTpls.appSID,
+        "templateId":sysConfig.chumuuSmsTpls.pswdTemplateId,
+        "datas":[params.code,'15']
+    };
+    httpSend(msg,callback);
+}
 function sendPasswordSms(params,callback){
     var msg ={
         "to": params.phone,
@@ -301,5 +321,7 @@ module.exports = {
     sendRejectVerifySms : sendRejectVerifySms ,
     sendOrderContainerSms : sendOrderContainerSms ,
     sendSignSmsForFhu : sendSignSmsForFhu ,
-    sendPasswordSmsForFhu : sendPasswordSmsForFhu
+    sendPasswordSmsForFhu : sendPasswordSmsForFhu,
+    sendSignSmsForChumuu : sendSignSmsForChumuu ,
+    sendPasswordSmsForChumuu : sendPasswordSmsForChumuu
 }

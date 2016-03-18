@@ -46,6 +46,13 @@ var fhuSmsTpls = {
     pswdTemplateId : 59913
 }
 
+var chumuuSmsTpls = {
+    appSID : 'aaf98f894f4fbec2014f6df103371517',
+    appToken : '7d90594455dbb71685784cf01a04e65c',
+    signTemplateId : 74078,
+    pswdTemplateId : 74080
+}
+
 var mysqlConnectOptions ={
     user: 'ti',
     password: 'tuoche',
@@ -79,5 +86,6 @@ module.exports = {
     mysqlConnectOptions: mysqlConnectOptions,
     xingeOptions : xingeOptions ,
     iosPushConfig : iosPushConfig ,
-    fhuSmsTpls : fhuSmsTpls
+    fhuSmsTpls : fhuSmsTpls ,
+    chumuuSmsTpls : chumuuSmsTpls
 }
